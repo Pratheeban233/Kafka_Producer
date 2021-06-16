@@ -29,26 +29,22 @@ public class mTaskDefinition {
 	@Autowired
 	private TaskDetailsConfiguration taskDetailsConfiguration;
 
-	public void mTaskDescription(String key) throws Exception {
-		Optional<TaskDetailsConfiguration.Config> configOptional = taskDetailsConfiguration.getJobConfigs(key);
-		if (configOptional.isPresent()) {
-			switch (configOptional.get().getTargetType()) {
-			case "MQ":
-				messageQueueIngester.mTaskImplementation(key);
-				break;
-			case "Rest":
-				restIngester.mTaskImplementation(key);
-				break;
-			case "JDBC":
-				jdbcIngester.mTaskImplementation(key);
-				break;
-			case "Custom":
-				customIngester.mTaskImplementation (key);
-				break;
-			default:
-				break;
-			}
+	public void mTaskDescription(String key, TaskDetailsConfiguration.Config value) throws Exception {
+		switch (value.getTargetType()) {
+		case "MQ":
+			messageQueueIngester.mTaskImplementation(key);
+			break;
+		case "Rest":
+			restIngester.mTaskImplementation(key);
+			break;
+		case "JDBC":
+			jdbcIngester.mTaskImplementation(key);
+			break;
+		case "Custom":
+			customIngester.mTaskImplementation(key);
+			break;
+		default:
+			break;
 		}
-
 	}
 }

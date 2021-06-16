@@ -10,7 +10,7 @@ import org.springframework.scheduling.config.ScheduledTaskRegistrar;
 
 import gov.nic.eap.data.TaskDetailsConfiguration;
 import gov.nic.eap.service.mTaskDefinition;
-import gov.nic.eap.util.RRSMap;
+import gov.nic.eap.util.mTaskMap;
 import lombok.extern.slf4j.Slf4j;
 
 @Configuration
@@ -34,14 +34,16 @@ public class DynamicSchedulingManager implements SchedulingConfigurer {
 		threadPoolTaskScheduler.initialize();
 		taskRegistrar.setTaskScheduler(threadPoolTaskScheduler);
 
-		RRSMap<String, TaskDetailsConfiguration.Config> jobConfigs = taskDetailsConfiguration.getJobConfigs();
+		mTaskMap<String, TaskDetailsConfiguration.Config> jobConfigs = taskDetailsConfiguration.getJobConfigs();
 		jobConfigs.forEach((key, value) -> {
 			if (value.isAutoStart()) {
 				CronTask task = new CronTask(() -> {
 					try {
-						mTasks.mTaskDescription(key);
+						log.info ("mTask begins for the key {} and value {}",key,value);
+						mTasks.mTaskDescription(key,value);
 					} catch (Exception exception) {
 						exception.printStackTrace();
+						log.error ("mTask process failed.");
 					}
 				}, (value.getCron()));
 				taskRegistrar.addCronTask(task);
