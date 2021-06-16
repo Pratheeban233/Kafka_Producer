@@ -1,0 +1,34 @@
+server:
+  port: 8082
+
+
+kafka:
+  producer:
+#    topic: eap_mailsms
+    numOfPartitions: 5
+    replicationFactor: 3
+    bootstrapservers: localhost:9092,localhost:9093,localhost:9094
+    applicationid: "eap-producer"
+    acks: 1
+    retries: 3
+
+spring:
+  datasource:
+    platform: postgresql
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/eapeauc_1405
+    username: postgres
+    password: root
+    type: com.zaxxer.hikari.HikariDataSource
+    hikari:
+      connection-timeout: 20000
+      maximum-pool-size: 50
+      max-lifetime: 1200000
+      auto-commit: true
+  profiles:
+    active: "JobConfig"
+
+logging:
+  level:
+    gov.nic.eap: TRACE
+    org.springframework.jdbc.core: TRACE

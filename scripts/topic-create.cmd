@@ -1,0 +1,1 @@
+D:\Apache_kafka\kafka_2.12-2.6.0\bin\windows\kafka-topics.bat --create --zookeeper localhost:2181 --topic eap_mailsms --partitions 1 --replication-factor 1
