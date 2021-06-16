@@ -12,11 +12,10 @@ schedule:
       inputs:
         isexecuted: BOOLEAN
         processid: INTEGER
-      updatequery: UPDATE public.eap_mail_sender SET processid = ?, initiateddate = ?, mailsource =? WHERE id = ?;
-      updateinputs:
+      updateQuery: UPDATE public.eap_mail_sender SET processid = ?, initiateddate = ? WHERE id = ?;
+      updateInputs:
         processid: INTEGER
         initiateddate: TIMESTAMP
-        mailsource: VARCHAR
         id: INTEGER
 
     sms:
@@ -31,8 +30,8 @@ schedule:
       inputs:
         isexecuted: BOOLEAN
         processid: INTEGER
-      updatequery: UPDATE public.eap_sms_sender SET processid = ?, initiateddate = ? WHERE id = ?;
-      updateinputs:
+      updateQuery: UPDATE public.eap_sms_sender SET processid = ?, initiateddate = ? WHERE id = ?;
+      updateInputs:
         processid: INTEGER
         initiateddate: TIMESTAMP
         id: INTEGER

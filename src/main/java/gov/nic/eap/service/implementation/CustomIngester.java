@@ -180,7 +180,7 @@ public class CustomIngester implements Ingester {
 		RrsBatchRequestValidator batchRequestValidator = new RrsBatchRequestValidator(key, config, rrsDBQuery, listOfAllRequestParams);
 		config = batchRequestValidator.updateBatchRequestParamsValidation();
 		if (config.isRequestValidation() && Objects.nonNull(message)) {
-			updateResult = jdbcConnectionUtil.getBatchResultSets(config.getUpdatequery(), config.getListOfQueryParams());
+			updateResult = jdbcConnectionUtil.getBatchResultSets(config.getUpdateQuery(), config.getListOfQueryParams());
 			for (Map<String, Object> result : updateResult) {
 				if (result.get("No. of Records Affected").equals(Integer.valueOf(1))) {
 					noOfUpdatedRecords++;

@@ -35,30 +35,21 @@ public class RrsRequestValidator {
 		String topic = null;
 		Optional<Map<String, String>> targetInputs = Optional.ofNullable(rsConfig.getTargetInputs());
 		if (targetInputs.isPresent()) {
-			 topic = targetInputs.get ().get ("topic");
+			topic = targetInputs.get().get("topic");
 		}
 		return topic;
 	}
 
 	public Config requestParamsValidation() throws Exception {
-		if (rsConfig.getMethod().equals(this.requestKey)) {
-			Optional<Map<String, String>> optParams = Optional.ofNullable(rsConfig.getInputs());
-			if (optParams.isPresent()) {
-				// Map<String, String> params = optParams.get();
-				Map<String, String> params = new HashMap<>();
-				params.putAll(rsConfig.getInputs());
-				// params.values().removeAll(Collections.singleton("TOKEN"));
-				// Check for All Mandatory Fields
-				if (params.keySet().equals(allRequestParams.keySet())) {
-
-					this.rsConfig = rrsDBQuery.queryFormatter(rsConfig, rsConfig.getInputs(), allRequestParams/*, token*/);
-				} else {
-					rsConfig.setResponse(CommonConstant.mandatoryList);
-					rsConfig.setRequestValidation(false);
-				}
+		Optional<Map<String, String>> optParams = Optional.ofNullable(rsConfig.getInputs());
+		if (optParams.isPresent()) {
+			Map<String, String> params = new HashMap<>();
+			params.putAll(rsConfig.getInputs());
+			if (params.keySet().equals(allRequestParams.keySet())) {
+				this.rsConfig = rrsDBQuery.queryFormatter(rsConfig, rsConfig.getInputs(), allRequestParams/*, token*/);
 			} else {
-				rsConfig.setBindedQuery(rsConfig.getQuery());
-				rsConfig.setRequestValidation(true);
+				rsConfig.setResponse(CommonConstant.mandatoryList);
+				rsConfig.setRequestValidation(false);
 			}
 		} else {
 			rsConfig.setRequestValidation(false);
@@ -67,29 +58,19 @@ public class RrsRequestValidator {
 	}
 
 	public Config updateRequestParamsValidation() throws Exception {
-		if (rsConfig.getMethod().equals(this.requestKey)) {
-			Optional<Map<String, String>> optParams = Optional.ofNullable(rsConfig.getUpdateinputs());
-			if (optParams.isPresent()) {
-				// Map<String, String> params = optParams.get();
-				Map<String, String> params = new HashMap<>();
-				params.putAll(rsConfig.getUpdateinputs());
-//					params.values ().removeAll (Collections.singleton ("TOKEN"));
-				// Check for All Mandatory Fields
-				if (params.keySet().equals(allRequestParams.keySet())) {
-
-					this.rsConfig = rrsDBQuery.queryFormatter(rsConfig, rsConfig.getUpdateinputs(), allRequestParams/*, token*/);
-				} else {
-					rsConfig.setResponse(CommonConstant.mandatoryList);
-					rsConfig.setRequestValidation(false);
-				}
+		Optional<Map<String, String>> optParams = Optional.ofNullable(rsConfig.getUpdateInputs());
+		if (optParams.isPresent()) {
+			Map<String, String> params = new HashMap<>();
+			params.putAll(rsConfig.getUpdateInputs());
+			if (params.keySet().equals(allRequestParams.keySet())) {
+				this.rsConfig = rrsDBQuery.queryFormatter(rsConfig, rsConfig.getUpdateInputs(), allRequestParams/*, token*/);
 			} else {
-				rsConfig.setBindedQuery(rsConfig.getQuery());
-				rsConfig.setRequestValidation(true);
+				rsConfig.setResponse(CommonConstant.mandatoryList);
+				rsConfig.setRequestValidation(false);
 			}
 		} else {
 			rsConfig.setRequestValidation(false);
 		}
-
 		return rsConfig;
 	}
 }

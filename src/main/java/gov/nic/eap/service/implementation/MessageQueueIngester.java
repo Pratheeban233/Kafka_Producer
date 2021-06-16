@@ -29,7 +29,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Slf4j
-public class MessageQueueIngester implements Ingester { // TaskImplementation
+public class MessageQueueIngester implements Ingester {
 
 	public static final String MAIL = "mail";
 	public static final String SMS = "sms";
@@ -63,9 +63,9 @@ public class MessageQueueIngester implements Ingester { // TaskImplementation
 			log.info("Incoming request key[" + key + "] and the allRequestParams [" + allRequestParams + "]");
 			RrsRequestValidator requestValidator = new RrsRequestValidator(key, config, rrsDBQuery, allRequestParams);
 			config = requestValidator.requestParamsValidation();
-			//test target topic
-			String topic = requestValidator.requestTargetInputValidator ();
-			if (config.isRequestValidation() && !topic.isEmpty () ) {
+			// test target topic
+			String topic = requestValidator.requestTargetInputValidator();
+			if (config.isRequestValidation() && !topic.isEmpty()) {
 				result = jdbcConnectionUtil.getResultSets(config.getQuery(), config.getQueryParams());
 				if (result.isEmpty()) {
 					log.info("No records available for [" + key + "] process");
@@ -75,13 +75,13 @@ public class MessageQueueIngester implements Ingester { // TaskImplementation
 				case MAIL:
 					List<Map<String, Object>> listOfMails = result.stream().filter(mail -> mail.keySet().contains("mailId")).collect(Collectors.toList());
 					if (!listOfMails.isEmpty()) {
-						produceMessage(key,topic, listOfMails);
+						produceMessage(key, topic, listOfMails);
 						log.info("Message produces for the key [" + key + "] and the listOfMails " + listOfMails + "]");
 					}
 				case SMS:
 					List<Map<String, Object>> listOfSms = result.stream().filter(sms -> sms.keySet().contains("smsId")).collect(Collectors.toList());
 					if (!listOfSms.isEmpty()) {
-						produceMessage(key,topic, listOfSms);
+						produceMessage(key, topic, listOfSms);
 						log.info("process Completed for the key [" + key + "] and the listOfSms " + listOfSms + "]");
 					}
 				}
@@ -91,13 +91,12 @@ public class MessageQueueIngester implements Ingester { // TaskImplementation
 		return result;
 	}
 
-	public ListenableFuture<SendResult<String, Object>> produceMessage(String key,String topic, List<Map<String, Object>> message) {
+	public ListenableFuture<SendResult<String, Object>> produceMessage(String key, String topic, List<Map<String, Object>> message) {
 		ListenableFuture<SendResult<String, Object>> future = null;
 		try {
-//			future = this.kafkaTemplate.send(producerConfig.getTopic(), key, new ObjectMapper().writeValueAsString(message));
 			future = this.kafkaTemplate.send(topic, key, new ObjectMapper().writeValueAsString(message));
-			log.info("message sent to the topic = [" + topic/*producerConfig.getTopic()*/ + "] with key = [" + future.get().getProducerRecord().key()
-					+ "] and message = [" + message + "] {}", future);
+			log.info("message sent to the topic = [" + topic + "] with key = [" + future.get().getProducerRecord().key() + "] and message = [" + message
+					+ "] {}", future);
 
 			future.addCallback(new ListenableFutureCallback<SendResult<String, Object>>() {
 				@Override
@@ -136,10 +135,6 @@ public class MessageQueueIngester implements Ingester { // TaskImplementation
 				allRequestParams.put("initiateddate", LocalDateTime.now().format(DATE_TIME_FORMATTER));
 
 				if (key.equalsIgnoreCase(MAIL) || key.equalsIgnoreCase(SMS)) {
-					//test random params
-					if (key.equalsIgnoreCase(MAIL)) {
-						allRequestParams.put("mailsource", "kafka_mail");
-					}
 					for (Map<String, Object> n : message) {
 						allRequestParams.put("id", n.get("id").toString());
 						noOfUpdatedRecords = getRrsRequestValidator(key, message, allRequestParams, config, noOfUpdatedRecords);
@@ -160,7 +155,7 @@ public class MessageQueueIngester implements Ingester { // TaskImplementation
 		RrsRequestValidator requestValidator = new RrsRequestValidator(key, config, rrsDBQuery, allRequestParams);
 		config = requestValidator.updateRequestParamsValidation();
 		if (config.isRequestValidation() && Objects.nonNull(message)) {
-			updateResult = jdbcConnectionUtil.getResultSets(config.getUpdatequery(), config.getQueryParams());
+			updateResult = jdbcConnectionUtil.getResultSets(config.getUpdateQuery(), config.getQueryParams());
 			for (Map<String, Object> result : updateResult) {
 				if (result.get("No. of Records Affected").equals(Integer.valueOf(1))) {
 					noOfUpdatedRecords++;

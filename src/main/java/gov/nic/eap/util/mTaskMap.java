@@ -2,7 +2,7 @@ package gov.nic.eap.util;
 
 import java.util.HashMap;
 
-public class RRSMap<K, V> extends HashMap<K, V> {
+public class mTaskMap<K, V> extends HashMap<K, V> {
 
 	private static final long serialVersionUID = 4018063427862508300L;
 
