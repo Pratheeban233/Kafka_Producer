@@ -12,7 +12,7 @@ import gov.nic.eap.service.implementation.MessageQueueIngester;
 import gov.nic.eap.service.implementation.RestIngester;
 
 @Service
-public class mTaskDefinition { //mTaskDefinition
+public class mTaskDefinition {
 
 	@Autowired
 	private MessageQueueIngester messageQueueIngester;
@@ -29,7 +29,7 @@ public class mTaskDefinition { //mTaskDefinition
 	@Autowired
 	private TaskDetailsConfiguration taskDetailsConfiguration;
 
-	public void mTaskImplementation(String key) throws Exception {
+	public void mTaskDescription(String key) throws Exception {
 		Optional<TaskDetailsConfiguration.Config> configOptional = taskDetailsConfiguration.getJobConfigs(key);
 		if (configOptional.isPresent()) {
 			switch (configOptional.get().getTargetType()) {

@@ -39,7 +39,7 @@ public class DynamicSchedulingManager implements SchedulingConfigurer {
 			if (value.isAutoStart()) {
 				CronTask task = new CronTask(() -> {
 					try {
-						mTasks.mTaskImplementation(key);
+						mTasks.mTaskDescription(key);
 					} catch (Exception exception) {
 						exception.printStackTrace();
 					}
