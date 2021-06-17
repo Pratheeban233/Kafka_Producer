@@ -17,7 +17,6 @@ public class TaskDetailsConfiguration {
 
 	mTaskMap<String, Config> jobConfigs;
 
-
 	public Optional<TaskDetailsConfiguration.Config> getJobConfigs(String key) {
 		return Optional.ofNullable(this.getJobConfigs().get(key));
 	}
