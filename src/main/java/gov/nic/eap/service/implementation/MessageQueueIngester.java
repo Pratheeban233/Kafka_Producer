@@ -28,10 +28,6 @@ import lombok.extern.slf4j.Slf4j;
 @NoArgsConstructor
 public class MessageQueueIngester implements Ingester {
 
-//	public static final String MAIL = "mail";
-//	public static final String SMS = "sms";
-//	public static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-
 	@Override
 	public List<Map<String, Object>> mTaskImplementation(String key, Config config, List<Map<String, Object>> result, ApplicationContext applicationContext)
 			throws Exception {
@@ -42,26 +38,6 @@ public class MessageQueueIngester implements Ingester {
 		topic = targetInputs.get().get("topic");
 		produceMessage(key, config, topic, result, applicationContext);
 		log.info("Message produces for the key [" + key + "] and the listOfMessages " + result + "]");
-
-		/*switch (key) {
-		case MAIL:
-			List<Map<String, Object>> listOfMails = result.stream().filter(mail -> mail.keySet().contains("mailId")).collect(Collectors.toList());
-			if (!listOfMails.isEmpty()) {
-				produceMessage(key, config, topic, listOfMails, applicationContext);
-				log.info("Message produces for the key [" + key + "] and the listOfMails " + listOfMails + "]");
-			}
-			break;
-		case SMS:
-			List<Map<String, Object>> listOfSms = result.stream().filter(sms -> sms.keySet().contains("smsId")).collect(Collectors.toList());
-			if (!listOfSms.isEmpty()) {
-				produceMessage(key, config, topic, listOfSms, applicationContext);
-				log.info("process Completed for the key [" + key + "] and the listOfSms " + listOfSms + "]");
-			}
-			break;
-		default:
-			break;
-		}*/
-
 		return Collections.emptyList();
 	}
 
@@ -84,7 +60,7 @@ public class MessageQueueIngester implements Ingester {
 					log.info("Sent message=[" + message + "] to Partition [" + result.getRecordMetadata().partition() + "] with offset=["
 							+ result.getRecordMetadata().offset() + "]");
 					try {
-						log.info("inside producers onSuccess method ...");
+						log.info("Inside producers onSuccess method ...");
 						applicationContext.getBean("jdbcIngester", JdbcIngester.class).mTaskImplementation(key, config, message, applicationContext);
 					} catch (Exception e) {
 						e.printStackTrace();

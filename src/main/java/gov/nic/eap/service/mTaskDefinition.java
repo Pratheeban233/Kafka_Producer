@@ -8,7 +8,6 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
-import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
 import gov.nic.eap.constant.CommonConstant;
@@ -37,12 +36,12 @@ public class mTaskDefinition {
 		if (execute) {
 			if (value.getQuery() != null) {
 				result = fetchDataForMQueue(value.getQuery());
-				if(result.isEmpty ())
+				if (result.isEmpty())
 					return CommonConstant.norecordsList;
 			}
 			Class cls = Class.forName("gov.nic.eap.service.implementation." + value.getTargetType());
 			Ingester ingester = (Ingester) cls.newInstance();
-			result = ingester.mTaskImplementation (key, value, result, applicationContext);
+			result = ingester.mTaskImplementation(key, value, result, applicationContext);
 		}
 		return result;
 	}
@@ -51,7 +50,7 @@ public class mTaskDefinition {
 		Optional<Shedlock> shedLock = shedlockRepository.findById(key);
 		if (shedLock.isPresent()) {
 			Duration duration = Duration.between(shedLock.get().getLockUntil(), LocalDateTime.now());
-			log.debug("shedlock duration time {}", duration);
+			log.debug("ShedLock duration time : {}", duration);
 			if (!duration.isNegative()) {
 				shedLock.get().setLockUntil(LocalDateTime.now().plusMinutes(2));
 				shedLock.get().setLockedAt(LocalDateTime.now());
@@ -64,7 +63,6 @@ public class mTaskDefinition {
 	}
 
 	private List<Map<String, Object>> fetchDataForMQueue(String query) {
-		List<Map<String, Object>> result;
 		return jdbcConnectionUtil.getResultSet(query);
 	}
 }
