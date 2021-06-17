@@ -13,6 +13,9 @@ import gov.nic.eap.service.mTaskDefinition;
 import gov.nic.eap.util.mTaskMap;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.List;
+import java.util.Map;
+
 @Configuration
 @Slf4j
 @EnableScheduling
@@ -40,7 +43,9 @@ public class DynamicSchedulingManager implements SchedulingConfigurer {
 				CronTask task = new CronTask(() -> {
 					try {
 						log.info ("mTask begins for the key {} and value {}",key,value);
-						mTasks.mTaskDescription(key,value);
+						Thread.currentThread ().setName (key);
+						List<Map<String, Object>> response = mTasks.mTaskDescription (key, value);
+						log.info ("mTask process completed for the key {} and response {}",key,response);
 					} catch (Exception exception) {
 						exception.printStackTrace();
 						log.error ("mTask process failed.");

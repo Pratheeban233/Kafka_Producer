@@ -19,7 +19,7 @@ public class RrsController {
 	@RequestMapping(value = "/{action}/**", method = { RequestMethod.GET, RequestMethod.POST })
 	public List<Map<String, Object>> getRichRestServiceResponse(@PathVariable String action, 
 			@RequestParam Map<String,String> allRequestParams,HttpServletRequest httpRequest) throws Exception {
-		return restIngester.mTaskImplementation (action);
+		return restIngester.mTaskImplementation (action,null,null,null);
 	}
 
 }
