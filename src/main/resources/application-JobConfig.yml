@@ -17,7 +17,7 @@ schedule:
     sms:
       Config:
       cron: '*/15 * * * * *'
-      autostart: true
+      autostart: false
       targetType: MessageQueueIngester
       targetInputs:
         topic: eap_sms

@@ -49,7 +49,6 @@ public class JdbcIngester implements Ingester {
 				}
 				log.info(noOfUpdatedRecords + " : " + key + " Record's Updated.");
 			}
-			return CommonConstant.invalidList;
 		}
 		return CommonConstant.norecordsList;
 

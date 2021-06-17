@@ -1,6 +1,5 @@
 package gov.nic.eap.service.implementation;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -36,9 +35,11 @@ public class MessageQueueIngester implements Ingester {
 		if (!targetInputs.isPresent())
 			return CommonConstant.mandatoryList;
 		topic = targetInputs.get().get("topic");
-		produceMessage(key, config, topic, result, applicationContext);
-		log.info("Message produces for the key [" + key + "] and the listOfMessages " + result + "]");
-		return Collections.emptyList();
+		ListenableFuture<SendResult<String, Object>> sendResultListenableFuture = produceMessage(key, config, topic, result, applicationContext);
+		log.info("Message produced for the key [" + sendResultListenableFuture.get().getProducerRecord().key() + "] to the topic ["
+				+ sendResultListenableFuture.get().getProducerRecord().topic() + "] and message(s) "
+				+ sendResultListenableFuture.get().getProducerRecord().value() + "]");
+		return CommonConstant.successList;
 	}
 
 	public ListenableFuture<SendResult<String, Object>> produceMessage(String key, Config config, String topic, List<Map<String, Object>> message,

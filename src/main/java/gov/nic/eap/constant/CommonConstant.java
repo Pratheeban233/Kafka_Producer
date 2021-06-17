@@ -9,6 +9,9 @@ public class CommonConstant {
 	
 	public static final String AUTHORIZATION_HEADER = "auth_token";
 
+	public static final List<Map<String, Object>> successList = new ArrayList<>();
+	public static final Map<String, Object> successMap = new HashMap<>();
+
 	public static final List<Map<String, Object>> invalidList = new ArrayList<>();
 	public static final Map<String, Object> invalidMap = new HashMap<>();
 	
@@ -38,6 +41,7 @@ public class CommonConstant {
 	}
 
 	public static class ResponseValue {
+		public static final String SUCCESS = "Success";
 		public static final String INVALID = "Invalid";
 		public static final String FILL_MANDATORY_FIELDS = "Fill Mandatory Parameters";
 		public static final String FIELDS_TYPE_MISMATCH = "Mismatch of Parameters Types";
@@ -76,5 +80,7 @@ public class CommonConstant {
 		norecordMap.put(ResponseKey.STATUS, ResponseValue.NO_RECORDS_ERROR);
 		norecordsList.add(norecordMap);
 
+		successMap.put (ResponseKey.STATUS,ResponseValue.SUCCESS);
+		successList.add (norecordMap);
 	}
 }
