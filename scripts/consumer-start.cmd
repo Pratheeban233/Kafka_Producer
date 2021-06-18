@@ -1,1 +1,1 @@
-D:\Apache_kafka\kafka_2.12-2.6.0\bin\windows\kafka-console-consumer.bat --bootstrap-server localhost:9092 --topic eap_mailsms
+D:\Apache_kafka\kafka_2.12-2.6.0\bin\windows\kafka-console-consumer.bat --bootstrap-server localhost:9092 --topic eap_mail --from-beginning

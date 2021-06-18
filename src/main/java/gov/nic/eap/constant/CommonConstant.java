@@ -9,6 +9,9 @@ public class CommonConstant {
 	
 	public static final String AUTHORIZATION_HEADER = "auth_token";
 
+	public static final List<Map<String, Object>> successList = new ArrayList<>();
+	public static final Map<String, Object> successMap = new HashMap<>();
+
 	public static final List<Map<String, Object>> invalidList = new ArrayList<>();
 	public static final Map<String, Object> invalidMap = new HashMap<>();
 	
@@ -33,11 +36,15 @@ public class CommonConstant {
 	public static final List<Map<String, Object>> norecordsList = new ArrayList<>();
 	public static final Map<String, Object> norecordMap = new HashMap<>();
 
+	public static final List<Map<String, Object>> threadLockList = new ArrayList<>();
+	public static final Map<String, Object> threadLockMap = new HashMap<>();
+
 	public static class ResponseKey {
 		public static final String STATUS = "Status";
 	}
 
 	public static class ResponseValue {
+		public static final String SUCCESS = "Success";
 		public static final String INVALID = "Invalid";
 		public static final String FILL_MANDATORY_FIELDS = "Fill Mandatory Parameters";
 		public static final String FIELDS_TYPE_MISMATCH = "Mismatch of Parameters Types";
@@ -46,6 +53,7 @@ public class CommonConstant {
 		public static final String METHOD_ERROR = "Method Not Supported";
 		public static final String AUTH_ERROR = "Not Authenticated";
 		public static final String NO_RECORDS_ERROR = "No Records available";
+		public static final String THREAD_LOCKED = "Thread Locked";
 	}
 	
 	static {
@@ -76,5 +84,10 @@ public class CommonConstant {
 		norecordMap.put(ResponseKey.STATUS, ResponseValue.NO_RECORDS_ERROR);
 		norecordsList.add(norecordMap);
 
+		successMap.put (ResponseKey.STATUS,ResponseValue.SUCCESS);
+		successList.add (successMap);
+
+		threadLockMap.put (ResponseKey.STATUS,ResponseValue.THREAD_LOCKED);
+		threadLockList.add (threadLockMap);
 	}
 }

@@ -31,15 +31,6 @@ public class RrsRequestValidator {
 		this.rsConfig.setRequestValidation(false);
 	}
 
-	public String requestTargetInputValidator() {
-		String topic = null;
-		Optional<Map<String, String>> targetInputs = Optional.ofNullable(rsConfig.getTargetInputs());
-		if (targetInputs.isPresent()) {
-			topic = targetInputs.get().get("topic");
-		}
-		return topic;
-	}
-
 	public Config requestParamsValidation() throws Exception {
 		Optional<Map<String, String>> optParams = Optional.ofNullable(rsConfig.getInputs());
 		if (optParams.isPresent()) {
@@ -52,7 +43,7 @@ public class RrsRequestValidator {
 				rsConfig.setRequestValidation(false);
 			}
 		} else {
-			rsConfig.setRequestValidation(false);
+			rsConfig.setRequestValidation(true);
 		}
 		return rsConfig;
 	}
@@ -69,7 +60,7 @@ public class RrsRequestValidator {
 				rsConfig.setRequestValidation(false);
 			}
 		} else {
-			rsConfig.setRequestValidation(false);
+			rsConfig.setRequestValidation(true);
 		}
 		return rsConfig;
 	}

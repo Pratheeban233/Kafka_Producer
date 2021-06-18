@@ -2,16 +2,12 @@ schedule:
   jobConfigs:
     mail:
       Config:
-      method: mail
       cron: '*/10 * * * * *'
-      autostart: true
-      targetType: MQ
+      autostart: false
+      targetType: MessageQueueIngester
       targetInputs:
         topic: eap_mail
-      query: SELECT * FROM public.eap_mail_sender WHERE isexecuted = ? AND processid = ?;
-      inputs:
-        isexecuted: BOOLEAN
-        processid: INTEGER
+      query: SELECT * FROM public.eap_mail_sender WHERE isexecuted = false AND processid = 0;
       updateQuery: UPDATE public.eap_mail_sender SET processid = ?, initiateddate = ? WHERE id = ?;
       updateInputs:
         processid: INTEGER
@@ -20,16 +16,12 @@ schedule:
 
     sms:
       Config:
-      method: sms
       cron: '*/15 * * * * *'
       autostart: false
-      targetType: MessageQueue
+      targetType: MessageQueueIngester
       targetInputs:
         topic: eap_sms
-      query: SELECT * FROM public.eap_sms_sender WHERE isexecuted = ? AND processid = ?;
-      inputs:
-        isexecuted: BOOLEAN
-        processid: INTEGER
+      query: SELECT * FROM public.eap_sms_sender WHERE isexecuted = false AND processid = 0;
       updateQuery: UPDATE public.eap_sms_sender SET processid = ?, initiateddate = ? WHERE id = ?;
       updateInputs:
         processid: INTEGER

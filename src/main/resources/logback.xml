@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration scan="true">
 
-	<property name="LOG_PATH" value="/home/kafka_producer_log/logs/" />
+	<property name="LOG_PATH" value="/home/logs/kafka_services/" />
 	<property name="LOG_PATTERN" value="%d{yyyy-MM-dd HH:mm:ss} %mdc [%thread] %level %logger{35} - %msg%n" />
 
-	<appender name="applicationLog" class="ch.qos.logback.core.rolling.RollingFileAppender">
-		<file>${LOG_PATH}/application.log</file>
+	<appender name="kafka_ProducerLog" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${LOG_PATH}/kafka_producer.log</file>
 		<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
 			<pattern>${LOG_PATTERN}</pattern>
 		</encoder>
@@ -19,10 +19,10 @@
 	</appender>
 	
 	<logger name="gov.nic.eap" additivity="false">
-		<appender-ref ref="applicationLog" />
+		<appender-ref ref="kafka_ProducerLog" />
 	</logger>
 	<root level="error">
-		<appender-ref ref="applicationLog" />
+		<appender-ref ref="kafka_ProducerLog" />
 	</root>
 	
 </configuration>

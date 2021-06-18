@@ -2,18 +2,18 @@ package gov.nic.eap.data;
 
 import java.util.*;
 
-import gov.nic.eap.util.mTaskMap;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
 
+import gov.nic.eap.util.mTaskMap;
 import lombok.Data;
 
 @Configuration
 @ConfigurationProperties("schedule")
 @Data
 @Component
-public class TaskDetailsConfiguration { // TaskDetailsConfiguration
+public class TaskDetailsConfiguration {
 
 	mTaskMap<String, Config> jobConfigs;
 
