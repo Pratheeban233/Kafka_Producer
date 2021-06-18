@@ -36,6 +36,9 @@ public class CommonConstant {
 	public static final List<Map<String, Object>> norecordsList = new ArrayList<>();
 	public static final Map<String, Object> norecordMap = new HashMap<>();
 
+	public static final List<Map<String, Object>> threadLockList = new ArrayList<>();
+	public static final Map<String, Object> threadLockMap = new HashMap<>();
+
 	public static class ResponseKey {
 		public static final String STATUS = "Status";
 	}
@@ -50,6 +53,7 @@ public class CommonConstant {
 		public static final String METHOD_ERROR = "Method Not Supported";
 		public static final String AUTH_ERROR = "Not Authenticated";
 		public static final String NO_RECORDS_ERROR = "No Records available";
+		public static final String THREAD_LOCKED = "Thread Locked";
 	}
 	
 	static {
@@ -81,6 +85,9 @@ public class CommonConstant {
 		norecordsList.add(norecordMap);
 
 		successMap.put (ResponseKey.STATUS,ResponseValue.SUCCESS);
-		successList.add (norecordMap);
+		successList.add (successMap);
+
+		threadLockMap.put (ResponseKey.STATUS,ResponseValue.THREAD_LOCKED);
+		threadLockList.add (threadLockMap);
 	}
 }

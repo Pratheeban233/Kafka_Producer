@@ -1,5 +1,6 @@
 package gov.nic.eap.service.implementation;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -15,6 +16,7 @@ import org.springframework.util.concurrent.ListenableFutureCallback;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 
 import gov.nic.eap.constant.CommonConstant;
 import gov.nic.eap.data.TaskDetailsConfiguration.Config;
@@ -37,8 +39,7 @@ public class MessageQueueIngester implements Ingester {
 		topic = targetInputs.get().get("topic");
 		ListenableFuture<SendResult<String, Object>> sendResultListenableFuture = produceMessage(key, config, topic, result, applicationContext);
 		log.info("Message produced for the key [" + sendResultListenableFuture.get().getProducerRecord().key() + "] to the topic ["
-				+ sendResultListenableFuture.get().getProducerRecord().topic() + "] and message(s) "
-				+ sendResultListenableFuture.get().getProducerRecord().value() + "]");
+				+ sendResultListenableFuture.get().getProducerRecord().topic() + "]");
 		return CommonConstant.successList;
 	}
 
@@ -46,9 +47,12 @@ public class MessageQueueIngester implements Ingester {
 			ApplicationContext applicationContext) {
 		ListenableFuture<SendResult<String, Object>> future = null;
 		try {
-			future = applicationContext.getBean("kafkaTemplate", KafkaTemplate.class).send(topic, key, new ObjectMapper().writeValueAsString(message));
-			log.info("message sent to the topic = [" + topic + "] with key = [" + future.get().getProducerRecord().key() + "] and message = [" + message
-					+ "] {}", future);
+			String messageAsJsonString = new ObjectMapper().setDateFormat (new SimpleDateFormat ("yyyy-MM-dd HH:mm:ss")).writeValueAsString(message);
+			log.info ("messageAsJsonString : "+messageAsJsonString);
+
+			future = applicationContext.getBean("kafkaTemplate", KafkaTemplate.class).send(topic, key, messageAsJsonString);
+			log.info("message sent to the topic = [" + future.get().getProducerRecord().topic() + "] with key = [" + future.get().getProducerRecord().key()
+					+ "] and message = [" + future.get().getProducerRecord().value() + "] , {}", future);
 
 			future.addCallback(new ListenableFutureCallback<SendResult<String, Object>>() {
 				@Override
@@ -63,6 +67,7 @@ public class MessageQueueIngester implements Ingester {
 					try {
 						log.info("Inside producers onSuccess method ...");
 						applicationContext.getBean("jdbcIngester", JdbcIngester.class).mTaskImplementation(key, config, message, applicationContext);
+						log.info ("Update process completed for the produced records.");
 					} catch (Exception e) {
 						e.printStackTrace();
 						log.error("Error occured while updating the records.");

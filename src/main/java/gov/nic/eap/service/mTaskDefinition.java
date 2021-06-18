@@ -42,6 +42,9 @@ public class mTaskDefinition {
 			Class cls = Class.forName("gov.nic.eap.service.implementation." + value.getTargetType());
 			Ingester ingester = (Ingester) cls.newInstance();
 			result = ingester.mTaskImplementation(key, value, result, applicationContext);
+		} else {
+			log.debug("ShedLock enabled.");
+			return CommonConstant.threadLockList;
 		}
 		return result;
 	}

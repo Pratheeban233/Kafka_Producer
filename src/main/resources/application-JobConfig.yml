@@ -3,7 +3,7 @@ schedule:
     mail:
       Config:
       cron: '*/10 * * * * *'
-      autostart: true
+      autostart: false
       targetType: MessageQueueIngester
       targetInputs:
         topic: eap_mail

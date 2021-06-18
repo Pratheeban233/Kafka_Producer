@@ -49,9 +49,10 @@ public class JdbcIngester implements Ingester {
 				}
 				log.info(noOfUpdatedRecords + " : " + key + " Record's Updated.");
 			}
-		}
-		return CommonConstant.norecordsList;
+		} else
+			return CommonConstant.norecordsList;
 
+		return CommonConstant.successList;
 	}
 
 	private int getRrsRequestValidator(String key, List<Map<String, Object>> message, Map<String, String> allRequestParams,
