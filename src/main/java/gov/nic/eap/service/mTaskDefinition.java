@@ -2,6 +2,7 @@ package gov.nic.eap.service;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -30,31 +31,30 @@ public class mTaskDefinition {
 	@Autowired
 	ApplicationContext applicationContext;
 
-	public List<Map<String, Object>> mTaskDescription(String key, TaskDetailsConfiguration.Config value) throws Exception {
+	public List<Map<String, Object>> mTaskDescription (String key, TaskDetailsConfiguration.Config value) throws Exception {
 		List<Map<String, Object>> result = null;
+		log.info("{} job trying to acquiring the shed lock.", key);
 		boolean execute = checkShedLock(key);
-		if (execute) {
-			if (value.getQuery() != null) {
+		if ( execute ) {
+			log.info("{} job acquired the shed lock at {}.", key, LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+			if ( value.getQuery() != null ) {
 				result = fetchDataForMQueue(value.getQuery());
-				if (result.isEmpty())
-					return CommonConstant.norecordsList;
 			}
-			Class cls = Class.forName("gov.nic.eap.service.implementation." + value.getTargetType());
-			Ingester ingester = (Ingester) cls.newInstance();
+			Ingester ingester = (Ingester) Class.forName("gov.nic.eap.service.implementation." + value.getTargetType()).newInstance();
 			result = ingester.mTaskImplementation(key, value, result, applicationContext);
 		} else {
-			log.debug("ShedLock enabled.");
+			log.debug("{} job doesn't acquire the shed lock. another job is already running.", key);
 			return CommonConstant.threadLockList;
 		}
 		return result;
 	}
 
-	private boolean checkShedLock(String key) {
+	private boolean checkShedLock (String key) {
 		Optional<Shedlock> shedLock = shedlockRepository.findById(key);
-		if (shedLock.isPresent()) {
+		if ( shedLock.isPresent() ) {
 			Duration duration = Duration.between(shedLock.get().getLockUntil(), LocalDateTime.now());
-			log.debug("ShedLock duration time : {}", duration);
-			if (!duration.isNegative()) {
+			log.debug("ShedLock duration time : {}", duration.toMinutes());
+			if ( !duration.isNegative() ) {
 				shedLock.get().setLockUntil(LocalDateTime.now().plusMinutes(2));
 				shedLock.get().setLockedAt(LocalDateTime.now());
 				shedLock.get().setLockedBy("Cron");
@@ -65,7 +65,8 @@ public class mTaskDefinition {
 		return false;
 	}
 
-	private List<Map<String, Object>> fetchDataForMQueue(String query) {
+	private List<Map<String, Object>> fetchDataForMQueue (String query) {
 		return jdbcConnectionUtil.getResultSet(query);
 	}
 }
+

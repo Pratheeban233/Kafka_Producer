@@ -1,9 +1,9 @@
 package gov.nic.eap.config;
 
-import java.util.List;
-import java.util.Map;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.SchedulingConfigurer;
@@ -20,7 +20,9 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @EnableScheduling
 public class DynamicSchedulingManager implements SchedulingConfigurer {
-	private final int POOL_SIZE = 10;
+
+	@Value("${thread.poolsize}")
+	private int POOL_SIZE;
 
 	@Autowired
 	private TaskDetailsConfiguration taskDetailsConfiguration;
@@ -29,9 +31,10 @@ public class DynamicSchedulingManager implements SchedulingConfigurer {
 	private mTaskDefinition mTasks;
 
 	@Override
-	public void configureTasks(ScheduledTaskRegistrar taskRegistrar) {
+	public void configureTasks (ScheduledTaskRegistrar taskRegistrar) {
 
 		ThreadPoolTaskScheduler threadPoolTaskScheduler = new ThreadPoolTaskScheduler();
+		threadPoolTaskScheduler.setPoolSize(POOL_SIZE);
 		threadPoolTaskScheduler.setPoolSize(POOL_SIZE);
 		threadPoolTaskScheduler.setThreadNamePrefix("scheduled_task_thread = ");
 		threadPoolTaskScheduler.initialize();
@@ -39,16 +42,18 @@ public class DynamicSchedulingManager implements SchedulingConfigurer {
 
 		mTaskMap<String, TaskDetailsConfiguration.Config> jobConfigs = taskDetailsConfiguration.getJobConfigs();
 		jobConfigs.forEach((key, value) -> {
-			if (value.isAutoStart()) {
+			if ( value.isAutoStart() ) {
 				CronTask task = new CronTask(() -> {
 					try {
 						log.info("mTask process begins for the key = {}", key);
-						Thread.currentThread().setName(key);
+						// test
+						Set<Thread> threads = Thread.getAllStackTraces().keySet();
+						threads.stream().filter(thread -> thread.getName().startsWith("scheduled_task_thread = ")).findAny().ifPresent(Thread::interrupt);
+
 						mTasks.mTaskDescription(key, value);
 						log.info("mTask process completed for the key = {}", key);
-					} catch (Exception exception) {
-						exception.printStackTrace();
-						log.error("mTask process failed.");
+					} catch (Exception ex) {
+						log.error("mTask process failed due to -> {} ", ex.getMessage(), ex);
 					}
 				}, (value.getCron()));
 				taskRegistrar.addCronTask(task);

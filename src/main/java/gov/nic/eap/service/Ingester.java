@@ -1,10 +1,11 @@
 package gov.nic.eap.service;
 
-import gov.nic.eap.data.TaskDetailsConfiguration.Config;
-import org.springframework.context.ApplicationContext;
-
 import java.util.List;
 import java.util.Map;
+
+import org.springframework.context.ApplicationContext;
+
+import gov.nic.eap.data.TaskDetailsConfiguration.Config;
 
 public interface Ingester {
 

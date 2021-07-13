@@ -1,10 +1,11 @@
 server:
-  port: 8082
+  port: 8080
 
+thread:
+  poolsize: 10
 
 kafka:
   producer:
-#    topic: eap_mailsms
     numOfPartitions: 5
     replicationFactor: 3
     bootstrapservers: localhost:9092,localhost:9093,localhost:9094
